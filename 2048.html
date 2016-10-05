@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>我要当司令</title>
+<style>
+	#container{
+		width: 200px;
+		height: 200px;
+		list-style: none;
+		padding: 0;
+		border: 5px solid #333;
+		background-color: #bbb;
+	}
+	li{
+		float: left;
+		width: 46px;
+		height: 46px;
+		border: 2px solid #bbb;
+		background-color: #999;
+		text-align: center;
+		line-height: 46px;
+		font-weight: bold;
+	}
+	.pingming{
+		background-color: #00f;
+	}
+	.gongbing{
+		background-color: #0f0;
+	}
+	.paizhang{
+		background-color: #f00;
+	}
+	.lianzhang{
+		background-color: #0ff;
+	}
+	.yingzhang{
+		background-color: #ff0;
+	}
+	.tuanzhang{
+		background-color: #f0f;
+	}
+	.lvzhang{
+		background-color: #8ff;
+	}
+	.shizhang{
+		background-color: #f8f;
+	}
+	.junzhang{
+		background-color: #ff8;
+	}
+	.siling{
+		background-color: #15b;
+	}
+	.kong{
+		background-color: #999;
+	}
+</style>
+</head>
+<body>
+	<ul id="container">
+		
+	</ul>
+<script src="jquery.min.js"></script>
+<script>
+	var obj={
+		"pingming":"平民",
+		"gongbing":"士兵",
+		"paizhang":"排长",
+		"yingzhang":"连长",
+		"lianzhang":"营长",
+		"tuanzhang":"团长",
+		"lvzhang":"旅长",
+		"shizhang":"师长",
+		"junzhang":"军长",
+		"siling":"司令"
+	};
+	var obj2={
+		"平民":"士兵",
+		"士兵":"排长",
+		"排长":"连长",
+		"连长":"营长",
+		"营长":"团长",
+		"团长":"旅长",
+		"旅长":"师长",
+		"师长":"军长",
+		"军长":"司令"
+	};
+	var obj3={
+		"平民":"pingming",
+		"士兵":"gongbing",
+		"排长":"paizhang",
+		"连长":"lianzhang",
+		"营长":"yingzhang",
+		"团长":"tuanzhang",
+		"旅长":"lvzhang",
+		"师长":"shizhang",
+		"军长":"junzhang",
+		"司令":"siling",
+	};
+	var colorArr=['pingming','pingming','gongbing'];
+	var flag = -1;
+	function init(){
+		for(var i=0;i<16;i++){
+			$('#container').append('<li class="kong"></li>');
+		}
+		//console.log(colorArr[3]);
+		var num1 = Math.random()*16|0;
+		var num2 = Math.random()*16|0;
+		var color1 = Math.random()*3|0;
+		var color2 = Math.random()*3|0;
+		$('li').eq(num1).removeClass('kong').addClass(colorArr[color1]).html(obj[colorArr[color1]]);
+		$('li').eq(num2).removeClass('kong').addClass(colorArr[color2]).html(obj[colorArr[color2]]);
+	}
+	init();
+	$(window).on('keydown',function(e){
+		var ht = '';
+		var newht = '';
+		var clas = '';
+		var newclas = '';
+		switch(e.keyCode){
+			case 37:left();break;
+			case 38:up();break;
+			case 39:right();break;
+			case 40:down();;break;
+		}
+	})
+	function down(){
+		for(var i=15;i>3;i--){
+			if(!$('li').eq(i).hasClass('kong')){
+				if($('li').eq(i).html()==$('li').eq(i-4).html()){
+					ht = $('li').eq(i).html();
+					newht = obj2[ht];
+					clas = obj3[ht];
+					newclas = obj3[newht];
+					$('li').eq(i-4).html('').removeClass(clas).addClass('kong');
+					$('li').eq(i).html(newht).removeClass(clas).addClass(newclas);
+					flag = i%4;
+				}else if($('li').eq(i-4).hasClass('kong') && $('li').eq(i).html()==$('li').eq(i-8).html()){
+					ht = $('li').eq(i).html();
+					newht = obj2[ht];
+					clas = obj3[ht];
+					newclas = obj3[newht];
+					$('li').eq(i-8).html('').removeClass(clas).addClass('kong');
+					$('li').eq(i).html(newht).removeClass(clas).addClass(newclas);
+					flag = i%4;
+				}else if($('li').eq(i-8).hasClass('kong') && $('li').eq(i-4).hasClass('kong') && $('li').eq(i).html()==$('li').eq(i-12).html()){
+					ht = $('li').eq(i).html();
+					newht = obj2[ht];
+					clas = obj3[ht];
+					newclas = obj3[newht];
+					$('li').eq(i-12).html('').removeClass(clas).addClass('kong');
+					$('li').eq(i).html(newht).removeClass(clas).addClass(newclas);
+					flag = i%4;
+				}
+			}
+		};
+		for(var j=11;j>-1;j--){
+			if(!$('li').eq(j).hasClass('kong') && $('li').eq(j+4).hasClass('kong')){
+				flag = j%4;
+				console.log(1);
+				ht = $('li').eq(j).html();
+				clas = obj3[ht];
+				$('li').eq(j+4).html(ht).addClass(clas).removeClass('kong');
+				$('li').eq(j).html('').addClass('kong').removeClass(clas);
+				if($('li').eq(j+8).hasClass('kong')){
+					ht = $('li').eq(j+4).html();
+					clas = obj3[ht];
+					$('li').eq(j+8).html(ht).addClass(clas).removeClass('kong');
+					$('li').eq(j+4).html('').addClass('kong').removeClass(clas);
+					if($('li').eq(j+12).hasClass('kong')){
+						ht = $('li').eq(j+8).html();
+						clas = obj3[ht];
+						$('li').eq(j+12).html(ht).addClass(clas).removeClass('kong');
+						$('li').eq(j+8).html('').addClass('kong').removeClass(clas);
+					}
+				}
+			}
+		};
+		check(flag);
+	}
+	function up(){
+		for(var i=0;i<12;i++){
+			if(!$('li').eq(i).hasClass('kong')){
+				if($('li').eq(i).html()==$('li').eq(i+4).html()){
+					ht = $('li').eq(i).html();
+					newht = obj2[ht];
+					clas = obj3[ht];
+					newclas = obj3[newht];
+					$('li').eq(i+4).html('').removeClass(clas).addClass('kong');
+					$('li').eq(i).html(newht).removeClass(clas).addClass(newclas);
+					flag = i%4+12;
+				}else if($('li').eq(i+4).hasClass('kong') && $('li').eq(i).html()==$('li').eq(i+8).html()){
+					ht = $('li').eq(i).html();
+					newht = obj2[ht];
+					clas = obj3[ht];
+					newclas = obj3[newht];
+					$('li').eq(i+8).html('').removeClass(clas).addClass('kong');
+					$('li').eq(i).html(newht).removeClass(clas).addClass(newclas);
+					flag = i%4+12;
+				}else if($('li').eq(i+8).hasClass('kong') && $('li').eq(i+4).hasClass('kong') && $('li').eq(i).html()==$('li').eq(i+12).html()){
+					ht = $('li').eq(i).html();
+					newht = obj2[ht];
+					clas = obj3[ht];
+					newclas = obj3[newht];
+					$('li').eq(i+12).html('').removeClass(clas).addClass('kong');
+					$('li').eq(i).html(newht).removeClass(clas).addClass(newclas);
+					flag = i%4+12;
+				}
+			}
+		};
+		for(var j=4;j<16;j++){
+			if(!$('li').eq(j).hasClass('kong') && $('li').eq(j-4).hasClass('kong')){
+				flag = j%4+12;
+				console.log(1);
+				ht = $('li').eq(j).html();
+				clas = obj3[ht];
+				$('li').eq(j-4).html(ht).addClass(clas).removeClass('kong');
+				$('li').eq(j).html('').addClass('kong').removeClass(clas);
+				if($('li').eq(j-8).hasClass('kong')){
+					ht = $('li').eq(j-4).html();
+					clas = obj3[ht];
+					$('li').eq(j-8).html(ht).addClass(clas).removeClass('kong');
+					$('li').eq(j-4).html('').addClass('kong').removeClass(clas);
+					if($('li').eq(j-12).hasClass('kong')){
+						ht = $('li').eq(j-8).html();
+						clas = obj3[ht];
+						$('li').eq(j-12).html(ht).addClass(clas).removeClass('kong');
+						$('li').eq(j-8).html('').addClass('kong').removeClass(clas);
+					}
+				}
+			}
+		};
+		check(flag);
+	}
+	function left(){
+		for(var i=0;i<16;i++){
+			if(!$('li').eq(i).hasClass('kong')){
+				if($('li').eq(i).html()==$('li').eq(i+1).html() && (i/4|0) == ((i+1)/4|0) ){
+					ht = $('li').eq(i).html();
+					newht = obj2[ht];
+					clas = obj3[ht];
+					newclas = obj3[newht];
+					$('li').eq(i+1).html('').removeClass(clas).addClass('kong');
+					$('li').eq(i).html(newht).removeClass(clas).addClass(newclas);
+					flag = (i/4|0)*4+3;
+				}else if($('li').eq(i+1).hasClass('kong') && $('li').eq(i).html()==$('li').eq(i+2).html() && (i/4|0) == ((i+2)/4|0) ){
+					ht = $('li').eq(i).html();
+					newht = obj2[ht];
+					clas = obj3[ht];
+					newclas = obj3[newht];
+					$('li').eq(i+2).html('').removeClass(clas).addClass('kong');
+					$('li').eq(i).html(newht).removeClass(clas).addClass(newclas);
+					flag = (i/4|0)*4+3;
+				}else if($('li').eq(i+2).hasClass('kong') && $('li').eq(i+1).hasClass('kong') && $('li').eq(i).html()==$('li').eq(i+3).html() && (i/4|0) == ((i+3)/4|0) ){
+					ht = $('li').eq(i).html();
+					newht = obj2[ht];
+					clas = obj3[ht];
+					newclas = obj3[newht];
+					$('li').eq(i+3).html('').removeClass(clas).addClass('kong');
+					$('li').eq(i).html(newht).removeClass(clas).addClass(newclas);
+					flag = (i/4|0)*4+3;
+				}
+			}
+		};
+		for(var j=0;j<16;j++){
+			if(!$('li').eq(j).hasClass('kong') && $('li').eq(j-1).hasClass('kong') && (j/4|0) == ((j-1)/4|0) ){
+				console.log(1);
+				flag = (j/4|0)*4+3;
+				ht = $('li').eq(j).html();
+				clas = obj3[ht];
+				$('li').eq(j-1).html(ht).addClass(clas).removeClass('kong');
+				$('li').eq(j).html('').addClass('kong').removeClass(clas);
+				if($('li').eq(j-2).hasClass('kong') && (j/4|0) == ((j-2)/4|0) ){
+					ht = $('li').eq(j-1).html();
+					clas = obj3[ht];
+					$('li').eq(j-2).html(ht).addClass(clas).removeClass('kong');
+					$('li').eq(j-1).html('').addClass('kong').removeClass(clas);
+					if($('li').eq(j-3).hasClass('kong') && (j/4|0) == ((j-3)/4|0) ){
+						ht = $('li').eq(j-2).html();
+						clas = obj3[ht];
+						$('li').eq(j-3).html(ht).addClass(clas).removeClass('kong');
+						$('li').eq(j-2).html('').addClass('kong').removeClass(clas);
+					}
+				}
+			}
+		};
+		check(flag);
+	}
+	function right(){
+		for(var i=0;i<16;i++){
+			if(!$('li').eq(i).hasClass('kong')){
+				if($('li').eq(i).html()==$('li').eq(i-1).html() && (i/4|0) == ((i-1)/4|0) ){
+					ht = $('li').eq(i).html();
+					newht = obj2[ht];
+					clas = obj3[ht];
+					newclas = obj3[newht];
+					$('li').eq(i-1).html('').removeClass(clas).addClass('kong');
+					$('li').eq(i).html(newht).removeClass(clas).addClass(newclas);
+					flag = (i/4|0)*4;
+				}else if($('li').eq(i-1).hasClass('kong') && $('li').eq(i).html()==$('li').eq(i-2).html() && (i/4|0) == ((i-2)/4|0) ){
+					ht = $('li').eq(i).html();
+					newht = obj2[ht];
+					clas = obj3[ht];
+					newclas = obj3[newht];
+					$('li').eq(i-2).html('').removeClass(clas).addClass('kong');
+					$('li').eq(i).html(newht).removeClass(clas).addClass(newclas);
+					flag = (i/4|0)*4;
+				}else if($('li').eq(i-2).hasClass('kong') && $('li').eq(i-1).hasClass('kong') && $('li').eq(i).html()==$('li').eq(i-3).html() && (i/4|0) == ((i-3)/4|0) ){
+					ht = $('li').eq(i).html();
+					newht = obj2[ht];
+					clas = obj3[ht];
+					newclas = obj3[newht];
+					$('li').eq(i-3).html('').removeClass(clas).addClass('kong');
+					$('li').eq(i).html(newht).removeClass(clas).addClass(newclas);
+					flag = (i/4|0)*4;
+				}
+			}
+		};
+		for(var j=0;j<16;j++){
+			if(!$('li').eq(j).hasClass('kong') && $('li').eq(j+1).hasClass('kong') && (j/4|0) == ((j+1)/4|0) ){
+				console.log(1);
+				flag = (j/4|0)*4;
+				ht = $('li').eq(j).html();
+				clas = obj3[ht];
+				$('li').eq(j+1).html(ht).addClass(clas).removeClass('kong');
+				$('li').eq(j).html('').addClass('kong').removeClass(clas);
+				if($('li').eq(j+2).hasClass('kong') && (j/4|0) == ((j+2)/4|0) ){
+					ht = $('li').eq(j+1).html();
+					clas = obj3[ht];
+					$('li').eq(j+2).html(ht).addClass(clas).removeClass('kong');
+					$('li').eq(j+1).html('').addClass('kong').removeClass(clas);
+					if($('li').eq(j+3).hasClass('kong') && (j/4|0) == ((j+3)/4|0) ){
+						ht = $('li').eq(j+2).html();
+						clas = obj3[ht];
+						$('li').eq(j+3).html(ht).addClass(clas).removeClass('kong');
+						$('li').eq(j+2).html('').addClass('kong').removeClass(clas);
+					}
+				}
+			}
+		};
+		check(flag);
+	}
+	function check(n){
+		if(n!=-1){
+			var color3 = Math.random()*3|0;
+			$('li').eq(n).removeClass('kong').addClass(colorArr[color3]).html(obj[colorArr[color3]]);
+		}
+		for(var i=0;i<16;i++){
+			if($('li').eq(i).html()=='司令'){
+				alert('你已经是司令了，还要继续吗');
+			}
+		}
+		flag = -1;
+	}
+	//屏幕滑动
+	function move(){
+		//var isMove = false;
+		var fangxiang = '';
+		var x1,y1,x2,y2;
+		$('#container').on("mousedown",function(e){
+			x1 = e.clientX;
+			y1 = e.clientY;
+		})
+		$('#container').on("mouseup",function(e){
+			x2 = e.clientX;
+			y2 = e.clientY;
+
+			if(Math.abs(x2-x1) > Math.abs(y2-y1)){
+				fangxiang = x2-x1>0? 'left' : 'right';
+			}
+			if(Math.abs(x2-x1) < Math.abs(y2-y1)){
+				fangxiang = y2-y1>0? 'down' : 'up';
+			}
+			console.log(fangxiang);
+		})
+	}
+</script>
+</body>
+</html>
